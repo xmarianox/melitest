@@ -15,14 +15,12 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // instanciamos butterKnife
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
     }
 

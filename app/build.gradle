@@ -37,4 +37,7 @@ dependencies {
     // retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.1'
     compile 'com.squareup.retrofit2:converter-gson'
+    // animations
+    compile 'com.github.florent37:viewanimator:1.0.3@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
