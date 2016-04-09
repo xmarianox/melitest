@@ -30,7 +30,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-
-    //
+    // UI bind dependencies
     compile 'com.jakewharton:butterknife:7.0.1'
+    // MercadoPago SDK and dependencies
+    compile ('com.mercadopago:android-sdk:0.9.16@aar') { transitive = true }
+    // retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson'
 }
