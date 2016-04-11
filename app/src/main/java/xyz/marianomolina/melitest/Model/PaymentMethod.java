@@ -1,5 +1,7 @@
 package xyz.marianomolina.melitest.model;
 
+import java.util.List;
+
 /**
  * Created by Mariano Molina on 9/4/16.
  * Twitter: @xsincrueldadx
@@ -9,6 +11,7 @@ public class PaymentMethod {
     private String name;
     private String payment_type_id;
     private String secure_thumbnail;
+    private List<Setting> settings;
 
     /**
      * PaymentMethod ResponseModel
@@ -77,5 +80,13 @@ public class PaymentMethod {
 
     public void setSecure_thumbnail(String secure_thumbnail) {
         this.secure_thumbnail = secure_thumbnail;
+    }
+
+    public List<Setting> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<Setting> settings) {
+        this.settings = settings;
     }
 }

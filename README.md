@@ -14,7 +14,7 @@ además de una identificación segura (token) de la tarjeta con la que se está 
 
 La secuencia de pantalla debe ser:
 
-1. Pantalla de ingreso de monto.
+1. Pantalla de ingreso de monto. OK
 
 2. Selección de medio de pago (de tipo 'credit_card'). Los medios de pago puede ser: Visa, Mastercard, American Express, etc. 
 Mostrar nombre e imagen. Para acceder a estos medios de pago, se consulta a la siguiente URL: https://api.mercadopago.com/v1/payment_methods?public_key=PUBLIC_KEY (Método GET).
