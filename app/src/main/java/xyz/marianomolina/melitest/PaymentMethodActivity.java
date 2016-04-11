@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.mercadopago.decorations.DividerItemDecoration;
 
@@ -90,7 +92,13 @@ public class PaymentMethodActivity extends AppCompatActivity {
                 // hideProgress
                 progressDialog.dismiss();
                 // setAdapter
-                adapter = new PaymentMethodAdapter(response.body(), R.layout.item_payment_method, getApplicationContext());
+                adapter = new PaymentMethodAdapter(response.body(), R.layout.item_payment_method, getApplicationContext(), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PaymentMethod selectedPaymentMethod = (PaymentMethod) v.getTag();
+                        Log.d(TAG, "Item: " + selectedPaymentMethod.getName());
+                    }
+                });
                 mRecyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -98,6 +106,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<PaymentMethod>> call, Throwable t) {
                 Log.d(TAG, "RetrofitError: " + t.getLocalizedMessage());
+                // hideProgress
+                progressDialog.dismiss();
+                // show errorMessage
+                Toast.makeText(getApplicationContext(), R.string.payment_error_message, Toast.LENGTH_SHORT).show();
             }
         });
     }

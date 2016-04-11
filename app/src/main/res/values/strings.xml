@@ -11,6 +11,7 @@
     <!-- Medio de pago -->
     <string name="payment_method_activity">Medios de pago</string>
     <string name="dialog_text">Descargando Metodos de pago</string>
+    <string name="payment_error_message">Error al buscar los medios de pago</string>
 
     <!-- Public Key -->
     <string name="public_key">444a9ef5-8a6b-429f-abdf-587639155d88</string>

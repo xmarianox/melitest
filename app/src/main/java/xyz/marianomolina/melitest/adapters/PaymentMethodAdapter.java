@@ -28,17 +28,19 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
     private List<PaymentMethod> dataset;
     private int itemLayout;
     private Context mContext;
+    private View.OnClickListener mListener = null;
 
-    public PaymentMethodAdapter(List<PaymentMethod> dataset, int layout, Context context) {
+    public PaymentMethodAdapter(List<PaymentMethod> dataset, int layout, Context context, View.OnClickListener listener) {
         this.dataset = dataset;
         this.itemLayout = layout;
         this.mContext = context;
+        this.mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View mView = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
-        return new ViewHolder(mView);
+        return new ViewHolder(mView, mListener);
     }
 
     @Override
@@ -53,6 +55,8 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
         Picasso.with(mContext)
                 .load(paymentMethod.getSecure_thumbnail())
                 .into(holder.mImageView);
+
+        holder.itemView.setTag(paymentMethod);
     }
 
     @Override
@@ -60,13 +64,24 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
         return dataset.size();
     }
 
+    public PaymentMethod getItem(int position) {
+        return dataset.get(position);
+    }
+
+    public View.OnClickListener getListener() {
+        return mListener;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.itemImage) ImageView mImageView;
         @Bind(R.id.itemName) TextView mTextView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, View.OnClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            if (listener != null) {
+                itemView.setOnClickListener(listener);
+            }
         }
     }
 }
