@@ -2,11 +2,9 @@ package xyz.marianomolina.melitest.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +51,7 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
         holder.mTextView.setText(paymentMethod.getName());
         // load images
         Picasso.with(mContext)
-                .load(paymentMethod.getThumbnail())
+                .load(paymentMethod.getSecure_thumbnail())
                 .into(holder.mImageView);
     }
 

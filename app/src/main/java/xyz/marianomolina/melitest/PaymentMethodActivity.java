@@ -1,5 +1,6 @@
 package xyz.marianomolina.melitest;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+
+import com.mercadopago.decorations.DividerItemDecoration;
 
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
     @Bind(R.id.payment_methods_list) RecyclerView mRecyclerView;
 
     private PaymentMethodAdapter adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +43,13 @@ public class PaymentMethodActivity extends AppCompatActivity {
         // instanciamos butterKnife
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        toolbar.setTitle(R.string.payment_method_activity);
         // set back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            //getSupportActionBar().setTitle(getString(R.string.payment_method_activity));
+            getSupportActionBar().setTitle(R.string.payment_method_activity);
         }
     }
 
@@ -54,14 +60,21 @@ public class PaymentMethodActivity extends AppCompatActivity {
         if (adapter == null) {
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            /*
-             * Get paymentMethod
-             * */
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(PaymentMethodActivity.this, DividerItemDecoration.VERTICAL_LIST));
+            // Get paymentMethod
             getAsyncPaymentMethods(getString(R.string.public_key));
         }
     }
 
     public void getAsyncPaymentMethods(String publicApiKey) {
+
+        // show progressbar
+        progressDialog = new ProgressDialog(PaymentMethodActivity.this);
+        progressDialog.setMessage(getResources().getString(R.string.dialog_text));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.mercadopago.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -73,8 +86,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<PaymentMethod>>() {
             @Override
             public void onResponse(Call<List<PaymentMethod>> call, Response<List<PaymentMethod>> response) {
-                Log.d(TAG, response.body().toString());
-
+                //Log.d(TAG, response.body().toString());
+                // hideProgress
+                progressDialog.dismiss();
+                // setAdapter
                 adapter = new PaymentMethodAdapter(response.body(), R.layout.item_payment_method, getApplicationContext());
                 mRecyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

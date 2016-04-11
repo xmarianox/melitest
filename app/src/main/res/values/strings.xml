@@ -2,7 +2,6 @@
     <string name="app_name">MeliTest</string>
     <string name="action_settings">Settings</string>
 
-
     <!-- MainActivity -->
     <string name="text">Haga</string>
     <string name="label_monto">Ingrese el importe a pagar</string>
@@ -10,7 +9,8 @@
     <string name="btn_pagar">Seleccionar Medio de pago</string>
 
     <!-- Medio de pago -->
-    <string name="payment_method_activity">Medio de pago</string>
+    <string name="payment_method_activity">Medios de pago</string>
+    <string name="dialog_text">Descargando Metodos de pago</string>
 
     <!-- Public Key -->
     <string name="public_key">444a9ef5-8a6b-429f-abdf-587639155d88</string>

@@ -1,5 +1,6 @@
 package xyz.marianomolina.melitest.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -76,6 +78,10 @@ public class MainActivityFragment extends Fragment {
         btnSelectPaymentMethod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // hideKeyboard
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(inputMonto.getWindowToken(), 0);
+                // openPaymentMethodActivity
                 Intent intentPaymentMethod = new Intent(getActivity(), PaymentMethodActivity.class);
                 EXTRA_PAYMENT_VALUE = inputMonto.getText().toString();
                 intentPaymentMethod.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
