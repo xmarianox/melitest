@@ -1,4 +1,4 @@
-package xyz.marianomolina.melitest.Model;
+package xyz.marianomolina.melitest.model;
 
 /**
  * Created by Mariano Molina on 9/4/16.

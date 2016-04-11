@@ -1,4 +1,4 @@
-package xyz.marianomolina.melitest.Model;
+package xyz.marianomolina.melitest.model;
 
 /**
  * Created by Mariano Molina on 9/4/16.
@@ -8,6 +8,7 @@ public class PaymentMethod {
     private String id;
     private String name;
     private String payment_type_id;
+    private String thumbnail;
 
     /**
      * PaymentMethod ResponseModel
@@ -68,5 +69,13 @@ public class PaymentMethod {
 
     public void setPayment_type_id(String payment_type_id) {
         this.payment_type_id = payment_type_id;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
