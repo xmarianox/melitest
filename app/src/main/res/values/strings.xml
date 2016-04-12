@@ -16,6 +16,7 @@
     <string name="selected_payment_method_activity">Seleccione su banco</string>
     
     <string name="title_activity_new_payment">Completar el pago</string>
+    <string name="selected_bank">Banco seleccionado</string>
     <string name="installments_label">Seleccione cantidad de cuotas</string>
     <string-array name="installments_list">
         <item>1</item>
