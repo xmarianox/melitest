@@ -2,6 +2,7 @@ package xyz.marianomolina.melitest.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -26,8 +27,6 @@ import xyz.marianomolina.melitest.R;
  */
 public class MainActivityFragment extends Fragment {
     private static final String TAG = "MainActivityFragment";
-    private String EXTRA_PAYMENT_VALUE;
-
     @Bind(R.id.inputMonto) EditText inputMonto;
     @Bind(R.id.btnSelectPaymentMethod) Button btnSelectPaymentMethod;
 
@@ -83,8 +82,7 @@ public class MainActivityFragment extends Fragment {
                 inputMethodManager.hideSoftInputFromWindow(inputMonto.getWindowToken(), 0);
                 // openPaymentMethodActivity
                 Intent intentPaymentMethod = new Intent(getActivity(), PaymentMethodActivity.class);
-                EXTRA_PAYMENT_VALUE = inputMonto.getText().toString();
-                intentPaymentMethod.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+                intentPaymentMethod.putExtra("EXTRA_PAYMENT_VALUE", inputMonto.getText().toString());
                 getActivity().startActivity(intentPaymentMethod);
             }
         });

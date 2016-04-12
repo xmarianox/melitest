@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.marianomolina.melitest.R;
-import xyz.marianomolina.melitest.model.CardIssuer;
+import xyz.marianomolina.melitest.model.Issuer;
 
 /**
  * Created by Mariano Molina on 11/4/16.
@@ -24,12 +24,12 @@ import xyz.marianomolina.melitest.model.CardIssuer;
 public class CardIssuerAdapter extends RecyclerView.Adapter<CardIssuerAdapter.ViewHolder> {
     private static final String LOG_TAG = PaymentMethodAdapter.class.getSimpleName();
 
-    private List<CardIssuer> dataset;
+    private List<Issuer> dataset;
     private int itemLayout;
     private Context mContext;
     private View.OnClickListener mListener = null;
 
-    public CardIssuerAdapter(List<CardIssuer> dataset, int layout, Context context, View.OnClickListener listener) {
+    public CardIssuerAdapter(List<Issuer> dataset, int layout, Context context, View.OnClickListener listener) {
         this.dataset = dataset;
         this.itemLayout = layout;
         this.mContext = context;
@@ -44,18 +44,18 @@ public class CardIssuerAdapter extends RecyclerView.Adapter<CardIssuerAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CardIssuer cardIssuer = dataset.get(position);
+        Issuer issuer = dataset.get(position);
 
         // set imageView contentDescription
-        holder.mImageView.setContentDescription(cardIssuer.getId());
+        holder.mImageView.setContentDescription(issuer.getId());
         // set name
-        holder.mTextView.setText(cardIssuer.getName());
+        holder.mTextView.setText(issuer.getName());
         // load images
         Picasso.with(mContext)
-                .load(cardIssuer.getSecure_thumbnail())
+                .load(issuer.getSecure_thumbnail())
                 .into(holder.mImageView);
 
-        holder.itemView.setTag(cardIssuer);
+        holder.itemView.setTag(issuer);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CardIssuerAdapter extends RecyclerView.Adapter<CardIssuerAdapter.Vi
         return dataset.size();
     }
 
-    public CardIssuer getItem(int position) {
+    public Issuer getItem(int position) {
         return dataset.get(position);
     }
 

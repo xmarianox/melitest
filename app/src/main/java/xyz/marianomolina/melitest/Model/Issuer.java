@@ -3,15 +3,15 @@ package xyz.marianomolina.melitest.model;
 /**
  * Created by Mariano Molina on 11/4/16.
  * Twitter: @xsincrueldadx
+ *
+ * Issuer ResponseModel {
+ *  "id": "297",
+ *  "name": "Macro",
+ *  "secure_thumbnail": "https://www.mercadopago.com/org-img/MP3/API/logos/297.gif",
+ *  "thumbnail": "http://img.mlstatic.com/org-img/MP3/API/logos/297.gif"
+ * }
  */
-public class CardIssuer {
-    /*
-    "id": "297",
-    "name": "Macro",
-    "secure_thumbnail": "https://www.mercadopago.com/org-img/MP3/API/logos/297.gif",
-    "thumbnail": "http://img.mlstatic.com/org-img/MP3/API/logos/297.gif"
-    * */
-
+public class Issuer {
     private String id;
     private String name;
     private String secure_thumbnail;

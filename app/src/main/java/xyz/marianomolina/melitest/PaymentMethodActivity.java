@@ -1,7 +1,9 @@
 package xyz.marianomolina.melitest;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private PaymentMethodAdapter adapter;
     private ProgressDialog progressDialog;
+    private String EXTRA_PAYMENT_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class PaymentMethodActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.payment_method_activity);
         }
+
+        EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
     }
 
     @Override
@@ -101,6 +106,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         Intent mIntent = new Intent(PaymentMethodActivity.this, SelectedPaymenMethodActivity.class);
                         mIntent.putExtra("PAYMENT_METHOD", gson.toJson(selectedPaymentMethod));
+                        mIntent.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
                         startActivity(mIntent);
                     }
                 });

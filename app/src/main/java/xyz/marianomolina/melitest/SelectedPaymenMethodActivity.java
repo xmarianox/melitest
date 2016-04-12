@@ -1,6 +1,7 @@
 package xyz.marianomolina.melitest;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.marianomolina.melitest.adapters.CardIssuerAdapter;
-import xyz.marianomolina.melitest.model.CardIssuer;
+import xyz.marianomolina.melitest.model.Issuer;
 import xyz.marianomolina.melitest.model.PaymentMethod;
 import xyz.marianomolina.melitest.services.PaymentService;
 
@@ -37,6 +38,7 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
     private CardIssuerAdapter mAdapter;
     private ProgressDialog progressDialog;
     private PaymentMethod mPaymentMethod;
+    private String EXTRA_PAYMENT_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,10 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.selected_payment_method_activity);
         }
-        //
+        // getData
         Gson gson = new Gson();
-        String jsonExtra = getIntent().getStringExtra("PAYMENT_METHOD");
-        mPaymentMethod = gson.fromJson(jsonExtra, PaymentMethod.class);
+        mPaymentMethod = gson.fromJson(getIntent().getStringExtra("PAYMENT_METHOD"), PaymentMethod.class);
+        EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
     }
 
 
@@ -88,16 +90,23 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
                 .build();
 
         PaymentService paymentService = retrofit.create(PaymentService.class);
-        Call<List<CardIssuer>> call = paymentService.getPaymentMethodSelected(publicApiKey, paymentMethodId);
-        call.enqueue(new Callback<List<CardIssuer>>() {
+        Call<List<Issuer>> call = paymentService.getPaymentMethodSelected(publicApiKey, paymentMethodId);
+        call.enqueue(new Callback<List<Issuer>>() {
             @Override
-            public void onResponse(Call<List<CardIssuer>> call, Response<List<CardIssuer>> response) {
+            public void onResponse(Call<List<Issuer>> call, Response<List<Issuer>> response) {
                 progressDialog.dismiss();
 
                 mAdapter = new CardIssuerAdapter(response.body(), R.layout.item_payment_method, getApplicationContext(), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG, "ITEM: " + v.getTag());
+
+                        Issuer mIssuer = (Issuer) v.getTag();
+                        Gson gson = new Gson();
+                        Intent mInten = new Intent(SelectedPaymenMethodActivity.this, NewPaymentActivity.class);
+                        mInten.putExtra("EXTRA_PAYMENT_METHOD", gson.toJson(mPaymentMethod));
+                        mInten.putExtra("EXTRA_ISSUER", gson.toJson(mIssuer));
+                        mInten.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+                        startActivity(mInten);
                     }
                 });
 
@@ -106,7 +115,7 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<CardIssuer>> call, Throwable t) {
+            public void onFailure(Call<List<Issuer>> call, Throwable t) {
                 Log.d(TAG, "RetrofitError: " + t.getLocalizedMessage());
                 // hideProgress
                 progressDialog.dismiss();
