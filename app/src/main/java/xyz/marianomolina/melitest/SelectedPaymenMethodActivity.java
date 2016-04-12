@@ -1,10 +1,9 @@
 package xyz.marianomolina.melitest;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,56 +23,60 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import xyz.marianomolina.melitest.adapters.PaymentMethodAdapter;
+import xyz.marianomolina.melitest.adapters.CardIssuerAdapter;
+import xyz.marianomolina.melitest.model.CardIssuer;
 import xyz.marianomolina.melitest.model.PaymentMethod;
 import xyz.marianomolina.melitest.services.PaymentService;
-/**
- * Created by Mariano Molina on 9/4/16.
- * Twitter: @xsincrueldadx
- */
-public class PaymentMethodActivity extends AppCompatActivity {
-    private static final String TAG = PaymentMethodActivity.class.getSimpleName();
+
+public class SelectedPaymenMethodActivity extends AppCompatActivity {
+    private static final String TAG = SelectedPaymenMethodActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.payment_methods_list) RecyclerView mRecyclerView;
+    @Bind(R.id.credit_cards_list) RecyclerView mRecyclerView;
 
-    private PaymentMethodAdapter adapter;
+    private CardIssuerAdapter mAdapter;
     private ProgressDialog progressDialog;
+    private PaymentMethod mPaymentMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_method);
+        setContentView(R.layout.activity_selected_paymen_method);
         // instanciamos butterKnife
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
 
-        toolbar.setTitle(R.string.payment_method_activity);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.selected_payment_method_activity);
         // set back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.payment_method_activity);
+            getSupportActionBar().setTitle(R.string.selected_payment_method_activity);
         }
+        //
+        Gson gson = new Gson();
+        String jsonExtra = getIntent().getStringExtra("PAYMENT_METHOD");
+        mPaymentMethod = gson.fromJson(jsonExtra, PaymentMethod.class);
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (adapter == null) {
+        if (mAdapter == null) {
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(PaymentMethodActivity.this, DividerItemDecoration.VERTICAL_LIST));
-            // Get paymentMethod
-            getAsyncPaymentMethods(getString(R.string.public_key));
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(SelectedPaymenMethodActivity.this, DividerItemDecoration.VERTICAL_LIST));
+            // Get
+            getAsyncCardIssuers(getString(R.string.public_key), mPaymentMethod.getId());
         }
     }
 
-    public void getAsyncPaymentMethods(String publicApiKey) {
+    public void getAsyncCardIssuers(String publicApiKey, String paymentMethodId) {
 
         // show progressbar
-        progressDialog = new ProgressDialog(PaymentMethodActivity.this);
+        progressDialog = new ProgressDialog(SelectedPaymenMethodActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.dialog_text));
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -85,31 +88,25 @@ public class PaymentMethodActivity extends AppCompatActivity {
                 .build();
 
         PaymentService paymentService = retrofit.create(PaymentService.class);
-
-        Call<List<PaymentMethod>> call = paymentService.getPaymentMethod(publicApiKey);
-        call.enqueue(new Callback<List<PaymentMethod>>() {
+        Call<List<CardIssuer>> call = paymentService.getPaymentMethodSelected(publicApiKey, paymentMethodId);
+        call.enqueue(new Callback<List<CardIssuer>>() {
             @Override
-            public void onResponse(Call<List<PaymentMethod>> call, final Response<List<PaymentMethod>> response) {
-                //Log.d(TAG, response.body().toString());
-                // hideProgress
+            public void onResponse(Call<List<CardIssuer>> call, Response<List<CardIssuer>> response) {
                 progressDialog.dismiss();
-                // setAdapter
-                adapter = new PaymentMethodAdapter(response.body(), R.layout.item_payment_method, getApplicationContext(), new View.OnClickListener() {
+
+                mAdapter = new CardIssuerAdapter(response.body(), R.layout.item_payment_method, getApplicationContext(), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PaymentMethod selectedPaymentMethod = (PaymentMethod) v.getTag();
-                        Gson gson = new Gson();
-                        Intent mIntent = new Intent(PaymentMethodActivity.this, SelectedPaymenMethodActivity.class);
-                        mIntent.putExtra("PAYMENT_METHOD", gson.toJson(selectedPaymentMethod));
-                        startActivity(mIntent);
+                        Log.d(TAG, "ITEM: " + v.getTag());
                     }
                 });
-                mRecyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<List<PaymentMethod>> call, Throwable t) {
+            public void onFailure(Call<List<CardIssuer>> call, Throwable t) {
                 Log.d(TAG, "RetrofitError: " + t.getLocalizedMessage());
                 // hideProgress
                 progressDialog.dismiss();

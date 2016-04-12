@@ -29,6 +29,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="xyz.marianomolina.melitest.MainActivity" />
         </activity>
+        <activity
+            android:name=".SelectedPaymenMethodActivity"
+            android:label="@string/title_activity_selected_paymen_method"
+            android:parentActivityName=".PaymentMethodActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="xyz.marianomolina.melitest.PaymentMethodActivity" />
+        </activity>
     </application>
 
 </manifest>
