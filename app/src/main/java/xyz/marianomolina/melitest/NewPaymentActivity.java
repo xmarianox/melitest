@@ -8,9 +8,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,6 +39,10 @@ public class NewPaymentActivity extends AppCompatActivity {
     private static final String TAG = NewPaymentActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.selectedBankImage) ImageView selectedBankImage;
+    @Bind(R.id.selectedBankLabel) TextView selectedBankLabel;
+    @Bind(R.id.installmentsSpinner) Spinner installmentsSpinner;
+    @Bind(R.id.recomendedMessage) TextView recomendedMessage;
 
     private ProgressDialog progressDialog;
     private String EXTRA_AMOUNT;
@@ -45,12 +56,10 @@ public class NewPaymentActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.payment_method_activity);
         // set back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.payment_method_activity);
         }
 
         try {
@@ -90,7 +99,32 @@ public class NewPaymentActivity extends AppCompatActivity {
             public void onResponse(Call<List<Installments>> call, Response<List<Installments>> response) {
                 progressDialog.dismiss();
 
-                Log.d(TAG, "RESPONSE: " + response.body());
+                final Installments installmentsItem = response.body().get(0);
+
+                Picasso.with(NewPaymentActivity.this)
+                        .load(installmentsItem.getIssuer().getSecure_thumbnail())
+                        .into(selectedBankImage);
+                selectedBankImage.setContentDescription(installmentsItem.getIssuer().getName());
+                selectedBankLabel.setText(installmentsItem.getIssuer().getName());
+
+                // Spinner
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(NewPaymentActivity.this, R.array.installments_list, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                installmentsSpinner.setAdapter(adapter);
+
+                installmentsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        //Log.d(TAG, installmentsItem.getPayer_costs().get(position).getRecommended_message());
+                        recomendedMessage.setText(installmentsItem.getPayer_costs().get(position).getRecommended_message());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
             }
 
             @Override

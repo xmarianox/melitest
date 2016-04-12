@@ -13,19 +13,24 @@
     <string name="dialog_text">Descargando Metodos de pago</string>
     <string name="payment_error_message">Error al buscar los medios de pago</string>
 
-
     <string name="selected_payment_method_activity">Seleccione su banco</string>
-
+    
+    <string name="title_activity_new_payment">Completar el pago</string>
+    <string name="installments_label">Seleccione cantidad de cuotas</string>
+    <string-array name="installments_list">
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+        <item>9</item>
+        <item>12</item>
+    </string-array>
+    
     <!-- Public Key -->
     <string name="public_key">444a9ef5-8a6b-429f-abdf-587639155d88</string>
 
-    <!-- saved data -->
-    <string name="saved_payment_value">saved_payment_value</string>
-    <string name="saved_payment_method">saved_payment_method</string>
-    <string name="saved_issuer">saved_issuer</string>
 
     <string name="title_activity_selected_paymen_method">SelectedPaymenMethodActivity</string>
-    <string name="title_activity_new_payment">NewPaymentActivity</string>
+
 
 
 </resources>
