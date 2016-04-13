@@ -81,6 +81,10 @@ public class NewPaymentActivity extends AppCompatActivity {
         getAsyncCardIssuers(getString(R.string.public_key), EXTRA_AMOUNT, EXTRA_PAYMENT_METHOD.getId(), EXTRA_ISSUER.getId());
     }
 
+
+
+
+
     public void getAsyncCardIssuers(String publicApiKey, String amount , final String paymentMethodId, String issuerID) {
 
         // show progressbar
@@ -156,10 +160,6 @@ public class NewPaymentActivity extends AppCompatActivity {
 
                     }
                 });
-
-
-
-
             }
 
             @Override
@@ -171,9 +171,5 @@ public class NewPaymentActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.payment_error_message, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
-
-
 }

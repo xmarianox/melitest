@@ -43,6 +43,8 @@ public class PaymentMethodActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String EXTRA_PAYMENT_VALUE;
 
+    private int RESULT_CODE = 128;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,23 @@ public class PaymentMethodActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.payment_method_activity);
         }
 
-        EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
+        if (savedInstanceState != null) {
+            EXTRA_PAYMENT_VALUE = savedInstanceState.getString("EXTRA_PAYMENT_VALUE");
+        } else {
+            EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        EXTRA_PAYMENT_VALUE = savedInstanceState.getString("EXTRA_PAYMENT_VALUE");
     }
 
     @Override
@@ -107,7 +125,9 @@ public class PaymentMethodActivity extends AppCompatActivity {
                         Intent mIntent = new Intent(PaymentMethodActivity.this, SelectedPaymenMethodActivity.class);
                         mIntent.putExtra("PAYMENT_METHOD", gson.toJson(selectedPaymentMethod));
                         mIntent.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+
                         startActivity(mIntent);
+
                     }
                 });
                 mRecyclerView.setAdapter(adapter);

@@ -68,7 +68,6 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Log.d(TAG, "onTextChanged: " + s.toString() + ", count: " + count);
                 if (count > 0) {
                     fadeIn(btnSelectPaymentMethod);
                 }

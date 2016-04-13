@@ -3,6 +3,7 @@ package xyz.marianomolina.melitest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,8 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private PaymentMethod mPaymentMethod;
     private String EXTRA_PAYMENT_VALUE;
+    private String PAYMENT_METHOD;
+    private int RESULT_CODE = 129;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,37 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.selected_payment_method_activity);
         }
+
+        if (savedInstanceState != null) {
+            PAYMENT_METHOD = savedInstanceState.getString("PAYMENT_METHOD");
+            EXTRA_PAYMENT_VALUE = savedInstanceState.getString("EXTRA_PAYMENT_VALUE");
+
+            Log.d(TAG, "Payment method: " + PAYMENT_METHOD + ", " + EXTRA_PAYMENT_VALUE);
+        } else {
+            PAYMENT_METHOD = getIntent().getStringExtra("PAYMENT_METHOD");
+            EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
+        }
+
         // getData
         Gson gson = new Gson();
-        mPaymentMethod = gson.fromJson(getIntent().getStringExtra("PAYMENT_METHOD"), PaymentMethod.class);
-        EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
+        mPaymentMethod = gson.fromJson(PAYMENT_METHOD, PaymentMethod.class);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("PAYMENT_METHOD", PAYMENT_METHOD);
+        outState.putString("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        PAYMENT_METHOD = savedInstanceState.getString("PAYMENT_METHOD");
+        EXTRA_PAYMENT_VALUE = savedInstanceState.getString("EXTRA_PAYMENT_VALUE");
+
+        Log.d(TAG, "Payment method: " + PAYMENT_METHOD + ", " + EXTRA_PAYMENT_VALUE);
+    }
 
     @Override
     protected void onResume() {
@@ -106,6 +134,7 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
                         mInten.putExtra("EXTRA_PAYMENT_METHOD", gson.toJson(mPaymentMethod));
                         mInten.putExtra("EXTRA_ISSUER", gson.toJson(mIssuer));
                         mInten.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+
                         startActivity(mInten);
                     }
                 });
