@@ -125,9 +125,8 @@ public class PaymentMethodActivity extends AppCompatActivity {
                         Intent mIntent = new Intent(PaymentMethodActivity.this, SelectedPaymenMethodActivity.class);
                         mIntent.putExtra("PAYMENT_METHOD", gson.toJson(selectedPaymentMethod));
                         mIntent.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
-
-                        startActivity(mIntent);
-
+                        //startActivity(mIntent);
+                        startActivityForResult(mIntent, RESULT_CODE);
                     }
                 });
                 mRecyclerView.setAdapter(adapter);
@@ -143,5 +142,16 @@ public class PaymentMethodActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.payment_error_message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_CODE) {
+            if (resultCode == RESULT_OK) {
+                EXTRA_PAYMENT_VALUE = data.getStringExtra("EXTRA_PAYMENT_VALUE");
+            }
+        }
     }
 }

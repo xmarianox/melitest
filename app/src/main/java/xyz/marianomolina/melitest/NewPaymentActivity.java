@@ -49,6 +49,7 @@ public class NewPaymentActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private String EXTRA_AMOUNT;
+    private String EXTRA_PAYMENT_METHOD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +74,15 @@ public class NewPaymentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        EXTRA_PAYMENT_METHOD = getIntent().getStringExtra("EXTRA_PAYMENT_METHOD");
+
         Gson gson = new Gson();
         Issuer EXTRA_ISSUER = gson.fromJson(getIntent().getStringExtra("EXTRA_ISSUER"), Issuer.class);
-        PaymentMethod EXTRA_PAYMENT_METHOD = gson.fromJson(getIntent().getStringExtra("EXTRA_PAYMENT_METHOD"), PaymentMethod.class);
+        PaymentMethod paymentMethod = gson.fromJson(EXTRA_PAYMENT_METHOD, PaymentMethod.class);
 
         // call
-        getAsyncCardIssuers(getString(R.string.public_key), EXTRA_AMOUNT, EXTRA_PAYMENT_METHOD.getId(), EXTRA_ISSUER.getId());
+        getAsyncCardIssuers(getString(R.string.public_key), EXTRA_AMOUNT, paymentMethod.getId(), EXTRA_ISSUER.getId());
     }
-
-
-
-
 
     public void getAsyncCardIssuers(String publicApiKey, String amount , final String paymentMethodId, String issuerID) {
 
@@ -171,5 +170,14 @@ public class NewPaymentActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.payment_error_message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_AMOUNT);
+        intent.putExtra("EXTRA_PAYMENT_METHOD", EXTRA_PAYMENT_METHOD);
+        setResult(RESULT_OK, intent);
     }
 }

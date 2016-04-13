@@ -3,7 +3,6 @@ package xyz.marianomolina.melitest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,8 +61,6 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             PAYMENT_METHOD = savedInstanceState.getString("PAYMENT_METHOD");
             EXTRA_PAYMENT_VALUE = savedInstanceState.getString("EXTRA_PAYMENT_VALUE");
-
-            Log.d(TAG, "Payment method: " + PAYMENT_METHOD + ", " + EXTRA_PAYMENT_VALUE);
         } else {
             PAYMENT_METHOD = getIntent().getStringExtra("PAYMENT_METHOD");
             EXTRA_PAYMENT_VALUE = getIntent().getStringExtra("EXTRA_PAYMENT_VALUE");
@@ -135,7 +132,7 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
                         mInten.putExtra("EXTRA_ISSUER", gson.toJson(mIssuer));
                         mInten.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
 
-                        startActivity(mInten);
+                        startActivityForResult(mInten, RESULT_CODE);
                     }
                 });
 
@@ -152,5 +149,24 @@ public class SelectedPaymenMethodActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.payment_error_message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_CODE) {
+            if (resultCode == RESULT_OK) {
+                PAYMENT_METHOD = data.getStringExtra("EXTRA_PAYMENT_METHOD");
+                EXTRA_PAYMENT_VALUE = data.getStringExtra("EXTRA_PAYMENT_VALUE");
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("EXTRA_PAYMENT_VALUE", EXTRA_PAYMENT_VALUE);
+        setResult(RESULT_OK, intent);
     }
 }
