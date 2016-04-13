@@ -1,16 +1,18 @@
 package xyz.marianomolina.melitest;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ public class NewPaymentActivity extends AppCompatActivity {
     @Bind(R.id.selectedBankLabel) TextView selectedBankLabel;
     @Bind(R.id.installmentsSpinner) Spinner installmentsSpinner;
     @Bind(R.id.recomendedMessage) TextView recomendedMessage;
+    @Bind(R.id.btnConfirmPayment) Button btnConfirmPayment;
 
     private ProgressDialog progressDialog;
     private String EXTRA_AMOUNT;
@@ -78,7 +81,7 @@ public class NewPaymentActivity extends AppCompatActivity {
         getAsyncCardIssuers(getString(R.string.public_key), EXTRA_AMOUNT, EXTRA_PAYMENT_METHOD.getId(), EXTRA_ISSUER.getId());
     }
 
-    public void getAsyncCardIssuers(String publicApiKey, String amount ,String paymentMethodId, String issuerID) {
+    public void getAsyncCardIssuers(String publicApiKey, String amount , final String paymentMethodId, String issuerID) {
 
         // show progressbar
         progressDialog = new ProgressDialog(NewPaymentActivity.this);
@@ -115,8 +118,37 @@ public class NewPaymentActivity extends AppCompatActivity {
                 installmentsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        //Log.d(TAG, installmentsItem.getPayer_costs().get(position).getRecommended_message());
-                        recomendedMessage.setText(installmentsItem.getPayer_costs().get(position).getRecommended_message());
+
+                        final String recommendedMessage = installmentsItem.getPayer_costs().get(position).getRecommended_message();
+
+                        recomendedMessage.setText(recommendedMessage);
+
+                        // alertamos al usuario antes de efectuar el pago
+                        btnConfirmPayment.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new AlertDialog.Builder(NewPaymentActivity.this)
+                                        .setTitle(R.string.alert_title)
+                                        .setMessage(recommendedMessage)
+                                        .setPositiveButton(R.string.alert_positive_button, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //continuar
+                                                dialog.dismiss();
+                                                Intent mainIntent = new Intent(NewPaymentActivity.this, MainActivity.class);
+                                                String message = "Pago efectuado con tarjeta: " + paymentMethodId + ", del banco: " + installmentsItem.getIssuer().getName() + ", por un total de " + recommendedMessage;
+                                                mainIntent.putExtra("EXTRA_MESSAGE", message);
+                                                startActivity(mainIntent);
+                                            }
+                                        }).setNegativeButton(R.string.alert_negative_button, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // cancel
+                                        dialog.dismiss();
+                                    }
+                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                            }
+                        });
                     }
 
                     @Override
@@ -124,6 +156,9 @@ public class NewPaymentActivity extends AppCompatActivity {
 
                     }
                 });
+
+
+
 
             }
 

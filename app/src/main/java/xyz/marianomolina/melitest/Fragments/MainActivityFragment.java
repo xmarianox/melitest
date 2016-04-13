@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.florent37.viewanimator.ViewAnimator;
 
@@ -29,6 +30,7 @@ public class MainActivityFragment extends Fragment {
     private static final String TAG = "MainActivityFragment";
     @Bind(R.id.inputMonto) EditText inputMonto;
     @Bind(R.id.btnSelectPaymentMethod) Button btnSelectPaymentMethod;
+    @Bind(R.id.transactionMessage) TextView transactionMessage;
 
 
     public MainActivityFragment() {
@@ -44,6 +46,14 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
+        String EXTRA_MESSAGE = getActivity().getIntent().getStringExtra("EXTRA_MESSAGE");
+
+        if (EXTRA_MESSAGE != null) {
+            transactionMessage.setVisibility(View.VISIBLE);
+            transactionMessage.setText(EXTRA_MESSAGE);
+        }
 
         btnSelectPaymentMethod.setVisibility(View.GONE);
 

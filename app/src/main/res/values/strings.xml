@@ -18,6 +18,7 @@
     <string name="title_activity_new_payment">Completar el pago</string>
     <string name="selected_bank">Banco seleccionado</string>
     <string name="installments_label">Seleccione cantidad de cuotas</string>
+    <string name="btn_confirm_pay">Comfirma el pago</string>
     <string-array name="installments_list">
         <item>1</item>
         <item>3</item>
@@ -25,7 +26,11 @@
         <item>9</item>
         <item>12</item>
     </string-array>
-    
+
+    <string name="alert_title">Desea realizar el pago?</string>
+    <string name="alert_positive_button">Aceptar</string>
+    <string name="alert_negative_button">Cancelar</string>
+
     <!-- Public Key -->
     <string name="public_key">444a9ef5-8a6b-429f-abdf-587639155d88</string>
 

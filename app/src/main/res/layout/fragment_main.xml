@@ -32,4 +32,14 @@
         android:text="@string/btn_pagar"
         android:layout_gravity="center_horizontal" />
 
+
+    <TextView
+        android:id="@+id/transactionMessage"
+        android:layout_marginTop="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
 </LinearLayout>
